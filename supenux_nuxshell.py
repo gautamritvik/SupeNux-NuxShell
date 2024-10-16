@@ -493,7 +493,7 @@ def help_cmds():
     print(f"help: Gives you the list of currently working commands.")
     print(f"report -issue: Helps you report an issue via NuxShell to SupeNux's GitHub Issue page.")
     print(f"change -file.dir: Changes the directory of a file.")
-    print(f"list -files.all: Lists all files stored in the local PC.")
+    print(f"list -files: Lists all files in a selected directory stored in the local PC.")
     print(f"open -file: Opens a file.")
     print(f"run -cmd.bash: Runs commands in the good ol' bash.\n")
 
@@ -552,7 +552,7 @@ def change_file_dir():
             # Move the file
             new_file_path = os.path.join(new_directory, os.path.basename(current_file_path))
             os.rename(current_file_path, new_file_path)
-            print(f"File was moved successfully to '{new_file_path}'. To check if it actually worked, type the command 'list -files.all'.")
+            print(f"File was moved successfully to '{new_file_path}'. To check if it actually worked, type the command 'list -files'.")
 
         except Exception as e:
             print(f"Error: {e}")
