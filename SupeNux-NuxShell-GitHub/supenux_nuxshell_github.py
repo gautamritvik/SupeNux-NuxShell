@@ -93,7 +93,8 @@ def textitor():
                     #os.environ.get("OPENAI_API_KEY"),
                     )
 
-                    raw_review = ''''''
+                    raw_review = '''
+                    '''
 
                     completion = client.chat.completions.create(
                     model="gpt-4o",
@@ -163,14 +164,7 @@ def textitor():
                     #os.environ.get("OPENAI_API_KEY"),
                     )
 
-                    raw_review = '''The text you have written is not grammatically correct. The following are the suggestions to correct the grammar are:
-                    1. The first letter of the first word in the first sentence should be capitalized.
-                    2. There should be a period at the end of the first sentence.
-                    3. The first letter of the second word in the second sentence should be capitalized.
-                    4. There should be a period at the end of the first sentence.
-
-                    Here's the revised version of the text you have written:
-                    'Hi, my name is John. I am a software engineer.'
+                    raw_review = '''
                     '''
 
                     completion = client.chat.completions.create(
@@ -485,7 +479,8 @@ def launch_txtr():
 
 def help_cmds():
     print(f"\nCommands:\n")
-    print(f"exit: Exits the terminal")
+    print(f"exit: Exits the terminal.")
+    print(f"clear: Clears the terminal.")
     print(f"system -info: Gives system's memory information.")
     print(f"system.memory -info: Gives system's memory information.")
     print(f"system.disk -info: Gives system's disk information.")
@@ -493,36 +488,65 @@ def help_cmds():
     print(f"help: Gives you the list of currently working commands.")
     print(f"report -issue: Helps you report an issue via NuxShell to SupeNux's GitHub Issue page.")
     print(f"change -file.dir: Changes the directory of a file.")
-    print(f"list -files: Lists all files in a selected directory stored in the local PC.")
+    print(f"list -files.all: Lists all files stored in the local PC.")
     print(f"open -file: Opens a file.")
     print(f"run -cmd.bash: Runs commands in the good ol' bash.\n")
 
 def report_issue():
+    global supenux_or_nuxshell
+    supenux_or_nuxshell = input("Are you reporting an issue for the OS SupeNux or this software, NuxShell? (SupeNux/NuxShell): ")
     def create_github_issue(repo, title, body, token):
-        url = f"https://api.github.com/repos/gautamritvik/SupeNux/issues"
-        headers = {
-            'Authorization': f'token {token}',
-            'Accept': 'application/vnd.github.v3+json',
-        }
-        data = {
-            'title': title,
-            'body': body,
-        }
-        
-        response = requests.post(url, headers=headers, json=data)
-        
-        if response.status_code == 201:
-            print("\nIssue created successfully!")
-            print("Issue URL:", response.json()['html_url'])
+        if supenux_or_nuxshell.lower() == "supenux":
+            url = f"https://api.github.com/repos/gautamritvik/SupeNux/issues"
+            headers = {
+                'Authorization': f'token {token}',
+                'Accept': 'application/vnd.github.v3+json',
+            }
+            data = {
+                'title': title,
+                'body': body,
+            }
+            
+            response = requests.post(url, headers=headers, json=data)
+            
+            if response.status_code == 201:
+                print("\nIssue created successfully!")
+                print("Issue URL:", response.json()['html_url'])
+            else:
+                print("\nError: Failed to create issue. Status Code:", response.status_code)
+                print(response.json())
+        elif supenux_or_nuxshell.lower() == "nuxshell":
+            url = f"https://api.github.com/repos/gautamritvik/SupeNux-NuxShell/issues"
+            headers = {
+                'Authorization': f'token {token}',
+                'Accept': 'application/vnd.github.v3+json',
+            }
+            data = {
+                'title': title,
+                'body': body,
+            }
+            
+            response = requests.post(url, headers=headers, json=data)
+            
+            if response.status_code == 201:
+                print("\nIssue created successfully!")
+                print("Issue URL:", response.json()['html_url'])
+            else:
+                print(f"\nError: Failed to create issue. Status Code: {response.status_code}")
+                print(response.json())
         else:
-            print("\nError: Failed to create issue. Status Code:", response.status_code)
-            print(response.json())
+            print("Error: Invalid input. Please type 'SupeNux' or 'NuxShell'.")
+            return
 
-    repo = 'gautamritvik/SupeNux'
+
+    if supenux_or_nuxshell.lower() == "supenux":
+        repo = 'gautamritvik/SupeNux'
+    elif supenux_or_nuxshell.lower() == "nuxshell":
+        repo = 'gautamritvik/SupeNux-NuxShell'
+
     title = input("Enter the title of the issue: ")
     body = input("Explain the issue: ")
     token = "github-token"
-
 
     t = threading.Thread(target=loading_animation)
     t.start()
@@ -552,7 +576,7 @@ def change_file_dir():
             # Move the file
             new_file_path = os.path.join(new_directory, os.path.basename(current_file_path))
             os.rename(current_file_path, new_file_path)
-            print(f"File was moved successfully to '{new_file_path}'. To check if it actually worked, type the command 'list -files'.")
+            print(f"File was moved successfully to '{new_file_path}'. To check if it actually worked, type the command 'list -files.all'.")
 
         except Exception as e:
             print(f"Error: {e}")
@@ -560,7 +584,7 @@ def change_file_dir():
         print("File was not moved.")
     else:
         print("Error: Invalid input. Please type 'y' or 'n'.")
-        change_file_dir()
+        return
 
 def list_files():
     user_selected_dir = input("Enter the directory to list all files: ")
