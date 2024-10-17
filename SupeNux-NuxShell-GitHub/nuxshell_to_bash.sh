@@ -6,6 +6,6 @@ while true; do
         echo "Returning to NuxShell..."
         exit 0
     else
-        bash -c "$cmd" 2>/dev/null || echo "bash: $cmd: command not found"
+        $cmd 2>&1 | sed 's/^.*: //'
     fi
 done
