@@ -639,11 +639,11 @@ def open_file():
     
 
 def run_cmd_bash():
-    bash_path = "/Users/Admin/Downloads/nuxshell_to_bash.sh"
+    bash_path = "/Users/Admin/Downloads/SupeNux-NuxShell/nuxshell_to_bash.sh"
     try:
         subprocess.run(['bash', bash_path], check=True)
     except subprocess.CalledProcessError as e:
-        print(f"Bash Shell Error: {e}")
+        print(f"Error: {e}")
     time.sleep(1)
 
 # Command workflow
